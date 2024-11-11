@@ -215,6 +215,7 @@ static const char *dmenucmd[] = {
 	"-nf", normfgcolor,
 	"-sb", selbgcolor,
 	"-sf", selfgcolor,
+	"-i",
 	NULL
 };
 static const char *termcmd[]  = { "kitty", NULL };
