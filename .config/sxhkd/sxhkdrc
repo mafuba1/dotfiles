@@ -1,0 +1,15 @@
+XF86MonBrightness{Down,Up}
+  brightnessctl -e s 8%{-,+}
+
+XF86Audio{Lower,Raise}Volume
+  ~/.local/bin/dunstvol {down,up}
+
+XF86AudioMute
+  ~/.local/bin/dunstvol mute
+
+XF86AudioMicMute
+  pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+Print
+  flameshot gui
+
