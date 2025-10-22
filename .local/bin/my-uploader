@@ -1,0 +1,29 @@
+#!/bin/bash
+# Dependencies: curl, notify-send, xclip
+function _notify()
+{
+    notify-send --expire-time 2000 \
+        --app-name 'my-uploader' \
+        --icon 'flameshot' \
+        "$1" "$2"
+}
+
+if [ ! -f "$1" ]
+then
+    _notify 'My uploader' 'Error: Invalid screenshot file.'
+    exit 1
+fi
+
+_notify 'My uploader' 'Uploading screenshot to 0x0.st ...'
+
+res=$(curl --silent --show-error \
+        --form "file=@$1" \
+        https://0x0.st 2>&1)
+
+if [[ ${res:0:7} == 'http://' || ${res:0:8} == 'https://' ]]
+then
+    echo -n "$res" | xclip -selection clipboard
+    _notify 'My uploader' 'Success! The link was sent to your clipboard'
+else
+    _notify 'My uploader' "Error: $res"
+fi
