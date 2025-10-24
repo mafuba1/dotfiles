@@ -147,7 +147,6 @@ static const Rule rules[] = {
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
 	RULE(.class = "steam", .tags = 1 << 4)
-	RULE(.class = "Spotify", .tags = 1 << 3)
 };
 
 /* Bar rules allow you to configure what is shown where on the bar, as well as
@@ -223,6 +222,8 @@ static const char *dmenucmd[] = {
 static const char *termcmd[]  = { "kitty", NULL };
 static const char *browsercmd[] = { "librewolf", NULL};
 static const char *lfcmd[] = {"kitty", "lf", NULL};
+static const char *musicplayercmd[] = {"kitty", "rmpc", NULL};
+static const char *vpncmd[] = { "throne", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
@@ -230,6 +231,8 @@ static const Key keys[] = {
 	{ MODKEY, 				 	            XK_Return,     spawn,                  {.v = termcmd } },
 	{ MODKEY, 				 	            XK_w,          spawn,                  {.v = browsercmd } },
 	{ MODKEY, 				 	            XK_e,          spawn,                  {.v = lfcmd } },
+	{ MODKEY, 				 	            XK_r,          spawn,                  {.v = musicplayercmd } },
+	{ MODKEY, 				 	            XK_v,          spawn,                  {.v = vpncmd } },
 	{ MODKEY,                       XK_b,          togglebar,              {0} },
 	{ MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
 	{ MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
@@ -237,7 +240,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_d,          incnmaster,             {.i = -1 } },
 	{ MODKEY,                       XK_h,          setmfact,               {.f = -0.05} },
 	{ MODKEY,                       XK_l,          setmfact,               {.f = +0.05} },
-	{ MODKEY,                       XK_space,     zoom,                   {0} },
+	{ MODKEY,                       XK_space,      zoom,                   {0} },
 	// { MODKEY|Mod4Mask,              XK_u,          incrgaps,               {.i = +1 } },
 	// { MODKEY|Mod4Mask|ShiftMask,    XK_u,          incrgaps,               {.i = -1 } },
 	// { MODKEY|Mod4Mask,              XK_i,          incrigaps,              {.i = +1 } },
@@ -282,7 +285,6 @@ static const Key keys[] = {
 	// TAGKEYS(                        XK_7,                                  6)
 	// TAGKEYS(                        XK_8,                                  7)
 	// TAGKEYS(                        XK_9,                                  8)
-	{0,                             XK_ISO_Next_Group, spawn, 						 SHCMD("kill -44 $(pidof dwmblocks)")} 
 };
 
 /* button definitions */
