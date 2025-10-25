@@ -1,0 +1,15 @@
+[Unit]
+Description=Compositor (picom)
+After=xsession.target
+PartOf=xsession.target
+
+[Service]
+ExecStart=picom --config %h/.local/share/picom/picom.conf
+Restart=on-failure
+RestartSec=2
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=%h/.Xauthority
+
+[Install]
+WantedBy=xsession.target
+

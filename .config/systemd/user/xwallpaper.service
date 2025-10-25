@@ -1,0 +1,16 @@
+[Unit]
+Description=Set desktop wallpaper
+After=xsession.target
+Before=picom.service
+PartOf=xsession.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/xwallpaper --zoom %h/Pictures/ER_NIGHTREIGN.jpg
+RemainAfterExit=yes
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=%h/.Xauthority
+
+[Install]
+WantedBy=xsession.target
+

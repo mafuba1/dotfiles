@@ -1,0 +1,15 @@
+[Unit]
+Description=Keyboard layout watcher for dwmblocks
+After=dwmblocks.service
+PartOf=dwmblocks.service
+
+[Service]
+ExecStart=%h/.local/bin/keyboard-watcher.sh
+Restart=on-failure
+RestartSec=2
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=%h/.Xauthority
+
+[Install]
+WantedBy=dwmblocks.service
+

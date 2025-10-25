@@ -1,0 +1,14 @@
+[Unit]
+Description=Screenshot utility (flameshot)
+After=xsession.target
+PartOf=xsession.target
+
+[Service]
+ExecStart=/usr/bin/flameshot
+Restart=on-failure
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=%h/.Xauthority
+
+[Install]
+WantedBy=xsession.target
+
