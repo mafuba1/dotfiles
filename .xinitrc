@@ -4,7 +4,10 @@ xset -dpms
 xset s off
 xset s noblank
 
-systemctl --user restart xsession.target
+systemctl --user start xsession.target
 
-exec dwm
+dwm
 
+systemctl --user stop xsession.target
+
+exit 0
