@@ -33,32 +33,32 @@ static char c000000[]                    = "#000000"; // placeholder value
 static char normfgcolor[]                = "#bbbbbb";
 static char normbgcolor[]                = "#222222";
 static char normbordercolor[]            = "#444444";
-static char normfloatcolor[]             = "#db8fd9";
+static char normfloatcolor[]             = "#444444";
 
 static char selfgcolor[]                 = "#eeeeee";
 static char selbgcolor[]                 = "#005577";
 static char selbordercolor[]             = "#db8fd9";
-static char selfloatcolor[]              = "#005577";
+static char selfloatcolor[]              = "#db8fd9";
 
 static char titlenormfgcolor[]           = "#bbbbbb";
 static char titlenormbgcolor[]           = "#222222";
 static char titlenormbordercolor[]       = "#444444";
 static char titlenormfloatcolor[]        = "#db8fd9";
 
-static char titleselfgcolor[]            = "#eeeeee";
-static char titleselbgcolor[]            = "#005577";
+static char titleselfgcolor[]            = "#edddee";
+static char titleselbgcolor[]            = "#222222";
 static char titleselbordercolor[]        = "#005577";
 static char titleselfloatcolor[]         = "#005577";
 
-static char tagsnormfgcolor[]            = "#bbbbbb";
+static char tagsnormfgcolor[]            = "#eeeeee";
 static char tagsnormbgcolor[]            = "#222222";
 static char tagsnormbordercolor[]        = "#444444";
 static char tagsnormfloatcolor[]         = "#db8fd9";
 
 static char tagsselfgcolor[]             = "#eeeeee";
 static char tagsselbgcolor[]             = "#005577";
-static char tagsselbordercolor[]         = "#005577";
-static char tagsselfloatcolor[]          = "#005577";
+static char tagsselbordercolor[]         = "#eeeee9";
+static char tagsselfloatcolor[]          = "#000000";
 
 static char hidnormfgcolor[]             = "#005577";
 static char hidselfgcolor[]              = "#227799";
@@ -172,7 +172,7 @@ static const BarRule barrules[] = {
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
-static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 static const int decorhints  = 1;    /* 1 means respect decoration hints */
 
