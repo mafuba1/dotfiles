@@ -6,6 +6,8 @@ xset s noblank
 
 systemctl --user start xsession.target
 
+xwallpaper --zoom ~/Pictures/ER_NIGHTREIGN.jpg
+
 dwm
 
 systemctl --user stop xsession.target
