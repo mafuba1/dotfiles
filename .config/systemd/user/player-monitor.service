@@ -1,0 +1,12 @@
+[Unit]
+Description=Music status and song monitor for dwmblocks
+After=dwmblocks.service
+PartOf=dwmblocks.service
+
+[Service]
+ExecStart=%h/.local/bin/player-monitor
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=dwmblocks.service
