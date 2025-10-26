@@ -1,6 +1,7 @@
 #!/bin/bash
 
 pid=$(pgrep dwmblocks)
+[ -z "$pid" ] && exit 1  # dwmblocks не найден — выходим
 
 xkb-switch -W | while read -r layout; do
     # Можно выводить в лог для отладки:
