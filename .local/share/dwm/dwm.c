@@ -59,6 +59,7 @@
 #define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
                                * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
 #define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
+#define MINIMIZED(C)            ((getstate(C->win) == IconicState))
 #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
@@ -210,6 +211,7 @@ struct Client {
 	int bw, oldbw;
 	unsigned int tags;
 	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
+	int isgame;
 	int issteam;
 	Client *next;
 	Client *snext;
@@ -270,6 +272,7 @@ typedef struct {
 	int isfloating;
 	int monitor;
 	int unmanaged;
+	int isgame;
 } Rule;
 
 #define RULE(...) { .monitor = -1, __VA_ARGS__ },
@@ -323,6 +326,7 @@ static void killclient(const Arg *arg);
 static void manage(Window w, XWindowAttributes *wa);
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
+static void minimize(Client *c);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c);
@@ -357,6 +361,7 @@ static void toggleview(const Arg *arg);
 static void unfocus(Client *c, int setfocus, Client *nextfocus);
 static void unmanage(Client *c, int destroyed);
 static void unmapnotify(XEvent *e);
+static void unminimize(Client *c);
 static void updatebarpos(Monitor *m);
 static void updatebars(void);
 static void updateclientlist(void);
@@ -373,6 +378,8 @@ static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
+static void bstack(Monitor *m);
+static void bstackhoriz(Monitor *m);
 
 /* bar functions */
 
@@ -458,6 +465,7 @@ applyrules(Client *c)
 		{
 			c->isfloating = r->isfloating;
 			c->tags |= r->tags;
+			c->isgame = r->isgame;
 			unmanaged = r->unmanaged;
 			for (m = mons; m && m->num != r->monitor; m = m->next);
 			if (m)
@@ -1469,6 +1477,8 @@ manage(Window w, XWindowAttributes *wa)
 	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
 
 	setclientstate(c, NormalState);
+	if(selmon->sel && selmon->sel->isfullscreen && !c->isfloating)
+		setfullscreen(selmon->sel, 0);
 	if (c->mon == selmon)
 		unfocus(selmon->sel, 0, c);
 	c->mon->sel = c;
@@ -1499,6 +1509,29 @@ maprequest(XEvent *e)
 		return;
 	if (!wintoclient(ev->window))
 		manage(ev->window, &wa);
+}
+
+void
+minimize(Client *c)
+{
+	if (!c || MINIMIZED(c))
+		return;
+
+	Window w = c->win;
+	static XWindowAttributes ra, ca;
+
+	// more or less taken directly from blackbox's hide() function
+	XGrabServer(dpy);
+	XGetWindowAttributes(dpy, root, &ra);
+	XGetWindowAttributes(dpy, w, &ca);
+	// prevent UnmapNotify events
+	XSelectInput(dpy, root, ra.your_event_mask & ~SubstructureNotifyMask);
+	XSelectInput(dpy, w, ca.your_event_mask & ~StructureNotifyMask);
+	XUnmapWindow(dpy, w);
+	setclientstate(c, IconicState);
+	XSelectInput(dpy, root, ra.your_event_mask);
+	XSelectInput(dpy, w, ca.your_event_mask);
+	XUngrabServer(dpy);
 }
 
 void
@@ -1953,6 +1986,10 @@ setfocus(Client *c)
 			XA_WINDOW, 32, PropModeReplace,
 			(unsigned char *) &(c->win), 1);
 	}
+
+	if (c->isgame && c->isfullscreen)
+		unminimize(c);
+
 	sendevent(c, wmatom[WMTakeFocus]);
 }
 
@@ -2294,6 +2331,10 @@ unfocus(Client *c, int setfocus, Client *nextfocus)
 {
 	if (!c)
 		return;
+
+	if (c->isgame && c->isfullscreen)
+		minimize(c);
+
 	grabbuttons(c, 0);
 	if (c->isfloating)
 		XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColFloat].pixel);
@@ -2348,6 +2389,17 @@ unmapnotify(XEvent *e)
 			unmanage(c, 0);
 	}
 }
+
+void
+unminimize(Client *c)
+{
+	if (!c || !MINIMIZED(c))
+		return;
+
+	XMapWindow(dpy, c->win);
+	setclientstate(c, NormalState);
+}
+
 
 void
 updatebars(void)
@@ -2737,5 +2789,90 @@ main(int argc, char *argv[])
 	if (restart)
 		execvp(argv[0], argv);
 	return EXIT_SUCCESS;
+}
+
+
+static void
+bstack(Monitor *m)
+{
+	unsigned int i, n;
+	int oh, ov, ih, iv;
+	int mx = 0, my = 0, mh = 0, mw = 0;
+	int sx = 0, sy = 0, sh = 0, sw = 0;
+	float mfacts, sfacts;
+	int mrest, srest;
+	Client *c;
+
+	getgaps(m, &oh, &ov, &ih, &iv, &n);
+	if (n == 0)
+		return;
+
+	sx = mx = m->wx + ov;
+	sy = my = m->wy + oh;
+	sh = mh = m->wh - 2*oh;
+	mw = m->ww - 2*ov - iv * (MIN(n, m->nmaster) - 1);
+	sw = m->ww - 2*ov - iv * (n - m->nmaster - 1);
+
+	if (m->nmaster && n > m->nmaster) {
+		sh = (mh - ih) * (1 - m->mfact);
+		mh = mh - ih - sh;
+		sx = mx;
+		sy = my + mh + ih;
+	}
+
+	getfacts(m, mw, sw, &mfacts, &sfacts, &mrest, &srest);
+
+	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
+		if (i < m->nmaster) {
+			resize(c, mx, my, (mw / mfacts) + (i < mrest ? 1 : 0) - (2*c->bw), mh - (2*c->bw), 0);
+			mx += WIDTH(c) + iv;
+		} else {
+			resize(c, sx, sy, (sw / sfacts) + ((i - m->nmaster) < srest ? 1 : 0) - (2*c->bw), sh - (2*c->bw), 0);
+			sx += WIDTH(c) + iv;
+		}
+	}
+}
+
+
+static void
+bstackhoriz(Monitor *m)
+{
+	unsigned int i, n;
+	int oh, ov, ih, iv;
+	int mx = 0, my = 0, mh = 0, mw = 0;
+	int sx = 0, sy = 0, sh = 0, sw = 0;
+	float mfacts, sfacts;
+	int mrest, srest;
+	Client *c;
+
+	getgaps(m, &oh, &ov, &ih, &iv, &n);
+	if (n == 0)
+		return;
+
+	sx = mx = m->wx + ov;
+	sy = my = m->wy + oh;
+	mh = m->wh - 2*oh;
+	sh = m->wh - 2*oh - ih * (n - m->nmaster - 1);
+	mw = m->ww - 2*ov - iv * (MIN(n, m->nmaster) - 1);
+	sw = m->ww - 2*ov;
+
+	if (m->nmaster && n > m->nmaster) {
+		sh = (mh - ih) * (1 - m->mfact);
+		mh = mh - ih - sh;
+		sy = my + mh + ih;
+		sh = m->wh - mh - 2*oh - ih * (n - m->nmaster);
+	}
+
+	getfacts(m, mw, sh, &mfacts, &sfacts, &mrest, &srest);
+
+	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
+		if (i < m->nmaster) {
+			resize(c, mx, my, (mw / mfacts) + (i < mrest ? 1 : 0) - (2*c->bw), mh - (2*c->bw), 0);
+			mx += WIDTH(c) + iv;
+		} else {
+			resize(c, sx, sy, sw - (2*c->bw), (sh / sfacts) + ((i - m->nmaster) < srest ? 1 : 0) - (2*c->bw), 0);
+			sy += HEIGHT(c) + ih;
+		}
+	}
 }
 

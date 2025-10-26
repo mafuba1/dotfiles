@@ -1,3 +1,9 @@
+/*
+ * Also applied
+ * games https://github.com/bakkeby/patches/blob/master/dwm/dwm-games-6.6.diff
+ * bottomstack https://dwm.suckless.org/patches/bottomstack/
+*/
+
 /* Bar functionality */
 #include "bar_indicators.c"
 #include "bar_tagicons.c"
@@ -26,10 +32,10 @@
 #include "seamless_restart.c"
 /* Layouts */
 #include "layout_facts.c"
-#include "layout_centeredmaster.c"
-#include "layout_centeredfloatingmaster.c"
-#include "layout_grid.c"
-#include "layout_horizgrid.c"
+// #include "layout_centeredmaster.c"
+// #include "layout_centeredfloatingmaster.c"
+// #include "layout_grid.c"
+// #include "layout_horizgrid.c"
 #include "layout_monocle.c"
 #include "layout_tile.c"
 

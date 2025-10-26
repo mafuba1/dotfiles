@@ -147,6 +147,9 @@ static const Rule rules[] = {
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
 	RULE(.class = "steam", .tags = 1 << 4)
+	/* class      instance    title       tags mask     isfloating   monitor  isgame */
+	{ "Steam",    NULL,       NULL,       0,            0,           -1,      1 },
+	{ "steam_app",NULL,       NULL,       0,            0,           -1,      1 },
 };
 
 /* Bar rules allow you to configure what is shown where on the bar, as well as
@@ -192,10 +195,12 @@ static const Layout layouts[] = {
 	{ " []=",      tile },    /* first entry is default */
 	{ " ><>",      NULL },    /* no layout function means floating behavior */
 	{ " [M]",      monocle },
-	{ " |M|",      centeredmaster },
-	{ " >M>",      centeredfloatingmaster },
-	{ " HHH",      grid },
-	{ " ---",      horizgrid },
+	{ " TTT",      bstack },
+	{ " ===",      bstackhoriz },
+	// { " |M|",      centeredmaster },
+	// { " >M>",      centeredfloatingmaster },
+	// { " HHH",      grid },
+	// { " ---",      horizgrid },
 };
 
 /* key definitions */
@@ -264,11 +269,9 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_t,          setlayout,              {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,          setlayout,              {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,          setlayout,              {.v = &layouts[2]} },
-	{ MODKEY,                       XK_c,          setlayout,              {.v = &layouts[3]} },
-	{ MODKEY|ShiftMask,             XK_c,          setlayout,              {.v = &layouts[4]} },
-	{ MODKEY,                       XK_g,          setlayout,              {.v = &layouts[5]} },
-	{ MODKEY|ShiftMask,             XK_g,          setlayout,              {.v = &layouts[6]} },
-	{ MODKEY|ShiftMask,             XK_Tab,        setlayout,              {0} },
+	{ MODKEY,                       XK_g,          setlayout,              {.v = &layouts[3]} },
+	{ MODKEY|ShiftMask,             XK_g,          setlayout,              {.v = &layouts[4]} },
+	// { MODKEY|ShiftMask,             XK_Tab,        setlayout,              {0} },
 	{ MODKEY|ShiftMask,             XK_f,          togglefloating,         {0} },
 	{ MODKEY,                       XK_0,          view,                   {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,          tag,                    {.ui = ~0 } },
@@ -281,10 +284,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_3,                                  2)
 	TAGKEYS(                        XK_4,                                  3)
 	TAGKEYS(                        XK_5,                                  4)
-	// TAGKEYS(                        XK_6,                                  5)
-	// TAGKEYS(                        XK_7,                                  6)
-	// TAGKEYS(                        XK_8,                                  7)
-	// TAGKEYS(                        XK_9,                                  8)
 };
 
 /* button definitions */
