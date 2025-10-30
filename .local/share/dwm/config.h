@@ -56,7 +56,7 @@ static char tagsnormbordercolor[]        = "#444444";
 static char tagsnormfloatcolor[]         = "#db8fd9";
 
 static char tagsselfgcolor[]             = "#eeeeee";
-static char tagsselbgcolor[]             = "#005577";
+static char tagsselbgcolor[]             = "#6572a0";
 static char tagsselbordercolor[]         = "#eeeee9";
 static char tagsselfloatcolor[]          = "#000000";
 
@@ -213,15 +213,15 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+static const char dmenu_lines[] = "8";
 static const char *dmenucmd[] = {
 	"dmenu_run",
 	"-m", dmenumon,
 	"-fn", dmenufont,
-	"-nb", normbgcolor,
-	"-nf", normfgcolor,
-	"-sb", selbgcolor,
-	"-sf", selfgcolor,
 	"-i",
+	"-c",
+	"-l", dmenu_lines,
+	"-p", "Run:", 
 	NULL
 };
 static const char *termcmd[]  = { "kitty", NULL };
@@ -229,6 +229,7 @@ static const char *browsercmd[] = { "librewolf", NULL};
 static const char *lfcmd[] = {"kitty", "lf", NULL};
 static const char *musicplayercmd[] = {"kitty", "rmpc", NULL};
 static const char *vpncmd[] = { "throne", NULL };
+static const char *sysutils[] = {"sh", "/home/mafuba/.local/bin/dmenu_sysutils", NULL};
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
@@ -238,7 +239,7 @@ static const Key keys[] = {
 	{ MODKEY, 				 	            XK_e,          spawn,                  {.v = lfcmd } },
 	{ MODKEY, 				 	            XK_r,          spawn,                  {.v = musicplayercmd } },
 	{ MODKEY, 				 	            XK_v,          spawn,                  {.v = vpncmd } },
-	{ MODKEY,                       XK_b,          togglebar,              {0} },
+	{ MODKEY, 				 	            XK_u,          spawn,                  {.v = sysutils } },
 	{ MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
 	{ MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
 	{ MODKEY,                       XK_i,          incnmaster,             {.i = +1 } },

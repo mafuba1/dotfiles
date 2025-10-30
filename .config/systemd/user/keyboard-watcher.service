@@ -5,7 +5,7 @@ PartOf=dwmblocks.service
 
 [Service]
 ExecStart=%h/.local/bin/keyboard-watcher.sh
-Restart=on-failure
+Restart=Always
 RestartSec=2
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=%h/.Xauthority

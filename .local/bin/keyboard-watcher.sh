@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pid=$(pgrep dwmblocks)
+pid=$(pgrep -n dwmblocks)
 [ -z "$pid" ] && exit 1  # dwmblocks не найден — выходим
 
 xkb-switch -W | while read -r layout; do
@@ -8,6 +8,6 @@ xkb-switch -W | while read -r layout; do
     # echo "Layout changed to: $layout" >> /tmp/kbd.log
 
     # Отправляем сигнал для обновления блока с сигналом 1
-    [ -n "$pid" ] && kill -RTMIN+1 "$pid"
+    pkill -RTMIN+1 -P "$pid" 2>/dev/null || kill -RTMIN+1 "$pid" 2>/dev/null
 done
 
