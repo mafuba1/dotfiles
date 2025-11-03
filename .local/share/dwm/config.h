@@ -230,16 +230,18 @@ static const char *lfcmd[] = {"kitty", "lf", NULL};
 static const char *musicplayercmd[] = {"kitty", "rmpc", NULL};
 static const char *vpncmd[] = { "throne", NULL };
 static const char *sysutils[] = {"sh", "/home/mafuba/.local/bin/dmenu_sysutils", NULL};
+static const char *krita[] = {"krita", NULL};
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
 	{ MODKEY,                       XK_p,          spawn,                  {.v = dmenucmd } },
-	{ MODKEY, 				 	            XK_Return,     spawn,                  {.v = termcmd } },
-	{ MODKEY, 				 	            XK_w,          spawn,                  {.v = browsercmd } },
-	{ MODKEY, 				 	            XK_e,          spawn,                  {.v = lfcmd } },
-	{ MODKEY, 				 	            XK_r,          spawn,                  {.v = musicplayercmd } },
-	{ MODKEY, 				 	            XK_v,          spawn,                  {.v = vpncmd } },
-	{ MODKEY, 				 	            XK_u,          spawn,                  {.v = sysutils } },
+	{ MODKEY, 		                XK_Return,     spawn,                  {.v = termcmd } },
+	{ MODKEY, 			            XK_w,          spawn,                  {.v = browsercmd } },
+	{ MODKEY, 		 	            XK_e,          spawn,                  {.v = lfcmd } },
+	{ MODKEY, 		 	            XK_r,          spawn,                  {.v = musicplayercmd } },
+	{ MODKEY, 		 	            XK_v,          spawn,                  {.v = vpncmd } },
+	{ MODKEY, 		 	            XK_u,          spawn,                  {.v = sysutils } },
+	{ MODKEY|ShiftMask,	            XK_k,          spawn,                  {.v = krita } },
 	{ MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
 	{ MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
 	{ MODKEY,                       XK_i,          incnmaster,             {.i = +1 } },
