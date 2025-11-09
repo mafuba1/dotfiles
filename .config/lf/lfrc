@@ -1,5 +1,5 @@
 #interpreter for shell commands
-set shell sh
+set shell zsh
 
 # set '-eu' options for shell commands
 # These options are used to have safer shell commands. Option '-e' is used to
@@ -121,6 +121,16 @@ cmd on-select &{{
     lf -remote "send $id set statfmt \"$(eza -ld --color=always "$f" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
 }}
 
+cmd z %{{
+    result="$(zoxide query --exclude "$PWD" "$@" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+    lf -remote "send $id cd \"$result\""
+}}
+
+cmd zi ${{
+    result="$(zoxide query -i | sed 's/\\/\\\\/g;s/"/\\"/g')"
+    lf -remote "send $id cd \"$result\""
+}}
+
 cmd git_branch ${{
     git branch | fzf | xargs git checkout
     pwd_shell="$(pwd | sed 's/\\/\\\\/g;s/"/\\"/g')"
@@ -148,6 +158,7 @@ cmd on-cd &{{
         fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%d\033[0m\033[1m%f\033[0m"
     fi
     lf -remote "send $id set promptfmt \"$fmt\""
+    zoxide add "$PWD"
 }}
 
 cmd on-cd &{{
