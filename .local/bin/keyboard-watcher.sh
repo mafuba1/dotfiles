@@ -1,13 +1,14 @@
 #!/bin/bash
 
 pid=$(pgrep -n dwmblocks)
-[ -z "$pid" ] && exit 1  # dwmblocks не найден — выходим
+[ -z "$pid" ] && exit 1
 
-xkb-switch -W | while read -r layout; do
-    # Можно выводить в лог для отладки:
-    # echo "Layout changed to: $layout" >> /tmp/kbd.log
+prev_layout=no_layout
 
-    # Отправляем сигнал для обновления блока с сигналом 1
-    pkill -RTMIN+1 -P "$pid" 2>/dev/null || kill -RTMIN+1 "$pid" 2>/dev/null
-done
-
+while read -r layout; do
+    echo "Layout: $layout"
+    [[ "$layout" == "$prev_layout" ]] && echo "Layout didn't change, exiting" && exit 1
+    pkill -RTMIN+1 dwmblocks || kill -RTMIN+1 "$pid" 
+    prev_layout=$layout
+done < <(xkb-switch -W)
+exit ${PIPESTATUS[0]}
