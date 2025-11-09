@@ -225,7 +225,7 @@ static const char *dmenucmd[] = {
 	NULL
 };
 static const char *termcmd[]  = { "kitty", NULL };
-static const char *browsercmd[] = { "librewolf", NULL};
+static const char *browsercmd[] = { "qutebrowser", NULL};
 static const char *lfcmd[] = {"kitty", "lf", NULL};
 static const char *musicplayercmd[] = {"kitty", "rmpc", NULL};
 static const char *vpncmd[] = { "throne", NULL };
