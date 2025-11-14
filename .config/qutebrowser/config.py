@@ -76,7 +76,7 @@ c.fileselect.handler = 'default'
 
 config.set('content.headers.user_agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36')
 
-c.content.proxy = "system"
+c.content.proxy = "socks5://127.0.0.1:2080"
 config.bind('xo', 'set content.proxy socks5://127.0.0.1:2080')
 config.bind('xO', 'set content.proxy system')
 
