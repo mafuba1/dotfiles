@@ -229,8 +229,9 @@ static const char *browsercmd[] = { "qutebrowser", NULL};
 static const char *lfcmd[] = {"kitty", "lf", NULL};
 static const char *musicplayercmd[] = {"kitty", "rmpc", NULL};
 static const char *vpncmd[] = { "throne", NULL };
-static const char *sysutils[] = {"sh", "/home/mafuba/.local/bin/dmenu_sysutils", NULL};
+static const char *sysutils[] = {"sh", "-c",  "~/.local/bin/dmenu_sysutils", NULL};
 static const char *krita[] = {"krita", NULL};
+static const char *twitch[] = {"sh", "-c", "~/.local/bin/proxyrino"};
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
@@ -242,6 +243,7 @@ static const Key keys[] = {
 	{ MODKEY, 		    	            XK_v,          spawn,                  {.v = vpncmd } },
 	{ MODKEY, 	   	 	              XK_u,          spawn,                  {.v = sysutils } },
 	{ MODKEY|ShiftMask,	            XK_k,          spawn,                  {.v = krita } },
+	{ MODKEY, 	   	 	              XK_c,          spawn,                  {.v = twitch } },
 	{ MODKEY,	                      XK_b,          togglebar,              {0} },
 	{ MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
 	{ MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
