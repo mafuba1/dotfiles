@@ -36,6 +36,7 @@ config.source('cookies_whitelist.py')
 
 c.tabs.position = "left"
 c.tabs.width = '10%'
+c.tabs.show = 'multiple'
 c.completion.shrink = True
 
 c.input.insert_mode.auto_leave = True
@@ -68,7 +69,8 @@ c.content.webgl = False
 c.content.webrtc_ip_handling_policy = 'disable-non-proxied-udp'
 c.content.autoplay = False
 c.content.pdfjs = True
-c.auto_save.session = True
+# c.auto_save.session = True
+c.session.default_name = 'last'
 
 c.downloads.location.directory = '~/Downloads/browser'
 c.editor.command = ['kitty', 'nvim', '{file}']
