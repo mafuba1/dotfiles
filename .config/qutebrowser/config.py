@@ -82,7 +82,7 @@ c.content.proxy = "socks5://127.0.0.1:2080"
 config.bind('xo', 'set content.proxy socks5://127.0.0.1:2080')
 config.bind('xO', 'set content.proxy system')
 
-config.bind(';m', 'hint links spawn mpv {hint-url}')
+config.bind(';m', 'hint links spawn mpv --ytdl-raw-options=proxy=http://127.0.0.1:2080 {hint-url}')
 
 config.bind(';q', 'jseval -q document.activeElement.blur()')
 config.bind('tT', 'config-cycle tabs.position top left')
