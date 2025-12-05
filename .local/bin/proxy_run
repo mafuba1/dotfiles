@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PROXY="socks5://127.0.0.1:2080"
+
+export http_proxy="$PROXY"
+export https_proxy="$PROXY"
+export all_proxy="$PROXY"
+export ALL_proxy="$PROXY"
+
+"$@"

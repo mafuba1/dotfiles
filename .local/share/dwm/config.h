@@ -229,9 +229,9 @@ static const char *browsercmd[] = { "qutebrowser", NULL};
 static const char *lfcmd[] = {"kitty", "lf", NULL};
 static const char *musicplayercmd[] = {"kitty", "rmpc", NULL};
 static const char *vpncmd[] = { "throne", NULL };
-static const char *sysutils[] = {"sh", "-c",  "~/.local/bin/dmenu_sysutils", NULL};
+static const char *sysutils[] = {"dmenu_sysutils", NULL};
 static const char *krita[] = {"krita", NULL};
-static const char *twitch[] = {"sh", "-c", "~/.local/bin/proxyrino"};
+static const char *twitch[] = {"proxy_run", "chatterino", NULL};
 
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
